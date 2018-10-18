@@ -14,7 +14,27 @@ app.prepare().then(() => {
     // Be sure to pass `true` as the second argument to `url.parse`.
     // This tells it to parse the query portion of the URL.
     const parsedUrl = parse(req.url, true)
-    handle(req, res, parsedUrl)
+    const { pathname } = parsedUrl
+
+    if (pathname === '/sse') {
+      res.writeHead(200, {
+        Connection: 'keep-alive',
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache'
+      });
+
+      let id = 1;
+      // Send event every 2-5 seconds or so forever...
+      setInterval(() => {
+        res.write(
+          `event: myEvent\nid: ${id}\ndata:This is event ${id}.`
+        );
+        res.write('\n\n');
+        id++;
+      }, 500 + Math.floor(Math.random() * 4500));
+    } else {
+      handle(req, res, parsedUrl)
+    }
   }).listen(3000, err => {
     if (err) throw err
     console.log('> Ready on http://localhost:3000')
