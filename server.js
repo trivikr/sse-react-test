@@ -1,42 +1,40 @@
 // This file doesn't go through babel or webpack transformation.
 // Make sure the syntax and sources this file requires are compatible with the current node version you are running
 // See https://github.com/zeit/next.js/issues/1245 for discussions on Universal Webpack or universal Babel
-const { createServer } = require('http')
-const { parse } = require('url')
-const next = require('next')
+const { createServer } = require("http");
+const { parse } = require("url");
+const next = require("next");
 
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+const dev = process.env.NODE_ENV !== "production";
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   createServer((req, res) => {
     // Be sure to pass `true` as the second argument to `url.parse`.
     // This tells it to parse the query portion of the URL.
-    const parsedUrl = parse(req.url, true)
-    const { pathname } = parsedUrl
+    const parsedUrl = parse(req.url, true);
+    const { pathname } = parsedUrl;
 
-    if (pathname === '/sse') {
+    if (pathname === "/sse") {
       res.writeHead(200, {
-        Connection: 'keep-alive',
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache'
+        Connection: "keep-alive",
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache"
       });
 
       let id = 1;
       // Send event every 2-5 seconds or so forever...
       setInterval(() => {
-        res.write(
-          `event: myEvent\nid: ${id}\ndata:This is event ${id}.`
-        );
-        res.write('\n\n');
+        res.write(`event: myEvent\nid: ${id}\ndata:This is event ${id}.`);
+        res.write("\n\n");
         id++;
       }, 500 + Math.floor(Math.random() * 4500));
     } else {
-      handle(req, res, parsedUrl)
+      handle(req, res, parsedUrl);
     }
   }).listen(3000, err => {
-    if (err) throw err
-    console.log('> Ready on http://localhost:3000')
-  })
-})
+    if (err) throw err;
+    console.log("> Ready on http://localhost:3000");
+  });
+});
