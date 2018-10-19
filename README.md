@@ -6,6 +6,7 @@ Testing Server-sent events with Node.js (backend) and React (frontend);
 - Run `yarn dev` to run the server
 - Visit http://localhost:3000 and notice that events will appear from EventStream every 0.5-5 seconds
 - Sped up Screen Recording:
+  
   [![sse-react-test](https://img.youtube.com/vi/27xUi-1e4fA/0.jpg)](https://www.youtube.com/watch?v=27xUi-1e4fA)
 
 This project was bootstrapped with [Create Next App](https://github.com/segmentio/create-next-app).
